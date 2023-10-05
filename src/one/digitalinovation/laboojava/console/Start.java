@@ -122,14 +122,20 @@ public class Start {
 
         Optional<Cliente> resultado = clienteNegocio.consultar(cpf);
 
-        if (resultado.isPresent()) {
+        while (!resultado.isPresent()) {
+            System.out.println("Usuário não cadastrado. Digite um CPF válido ou 'S' para sair:");
+            cpf = LeitoraDados.lerDado();
 
-            Cliente cliente = resultado.get();
-            System.out.println(String.format("Olá %s! Você está logado.", cliente.getNome()));
-            clienteLogado = cliente;
-        } else {
-            System.out.println("Usuário não cadastrado.");
-            System.exit(0);
+            if (cpf.equalsIgnoreCase("S")) {
+                System.out.println("Aplicação encerrada.");
+                System.exit(0);
+            }
+
+            resultado = clienteNegocio.consultar(cpf);
         }
+
+        Cliente cliente = resultado.get();
+        System.out.println(String.format("Olá %s! Você está logado.", cliente.getNome()));
+        clienteLogado = cliente;
     }
 }
